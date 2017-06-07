@@ -1189,7 +1189,7 @@
     Pivot Table UI: calls Pivot Table core above with options set by user
      */
     $.fn.pivotUI = function(input, inputOpts, overwrite, locale) {
-      var a, aggregator, aggregatorClone, aggregatorList, attr, attrLength, attrValues, colOrderArrow, defaults, e, existingOpts, fn1, i, initialRender, l, len1, len2, len3, len4, len5, localeDefaults, localeStrings, materializedInput, n, o, opts, orderedAggregators, orderedRenderers, ordering, pivotTable, r, recordsProcessed, ref, ref1, refresh, refreshDelayed, renderer, rendererClone, rendererControl, rendererList, rowOrderArrow, shownAttributes, t, tr1, tr2, u, uiTable, unused, unusedAttrsVerticalAutoCutoff, unusedAttrsVerticalAutoOverride, x;
+      var a, aggregator, attr, attrLength, attrValues, colOrderArrow, defaults, e, existingOpts, fn1, i, initialRender, l, len1, len2, len3, localeDefaults, localeStrings, materializedInput, n, o, opts, ordering, pivotTable, recordsProcessed, ref, ref1, ref2, ref3, refresh, refreshDelayed, renderer, rendererControl, rowOrderArrow, shownAttributes, tr1, tr2, uiTable, unused, unusedAttrsVerticalAutoCutoff, unusedAttrsVerticalAutoOverride, x;
       if (overwrite == null) {
         overwrite = false;
       }
@@ -1269,27 +1269,9 @@
         renderer = $("<select>").addClass('pvtRenderer').appendTo(rendererControl).bind("change", function() {
           return refresh();
         });
-        rendererClone = $.extend(true, {}, opts.renderers);
-        if (opts.sorting) {
-          rendererList = [];
-          for (r in rendererClone) {
-            if (!hasProp.call(rendererClone, r)) continue;
-            rendererList.push(r);
-          }
-          if (typeof opts.sorting === "function") {
-            rendererList.sort(opts.sorting);
-          } else {
-            rendererList.sort();
-          }
-          orderedRenderers = {};
-          for (i = l = 0, len1 = rendererList.length; l < len1; i = ++l) {
-            r = rendererList[i];
-            orderedRenderers[r] = rendererClone[r];
-          }
-          rendererClone = orderedRenderers;
-        }
-        for (x in rendererClone) {
-          if (!hasProp.call(rendererClone, x)) continue;
+        ref = opts.renderers;
+        for (x in ref) {
+          if (!hasProp.call(ref, x)) continue;
           $("<option>").val(x).html(x).appendTo(renderer);
         }
         unused = $("<td>").addClass('pvtAxisContainer pvtUnused');
@@ -1311,8 +1293,8 @@
         }
         if (!isNaN(unusedAttrsVerticalAutoCutoff)) {
           attrLength = 0;
-          for (n = 0, len2 = shownAttributes.length; n < len2; n++) {
-            a = shownAttributes[n];
+          for (l = 0, len1 = shownAttributes.length; l < len1; l++) {
+            a = shownAttributes[l];
             attrLength += a.length;
           }
           unusedAttrsVerticalAutoOverride = attrLength > unusedAttrsVerticalAutoCutoff;
@@ -1323,7 +1305,7 @@
           unused.addClass('pvtHorizList');
         }
         fn1 = function(attr) {
-          var attrElem, checkContainer, closeFilterBox, controls, filterItem, filterItemExcluded, finalButtons, hasExcludedItem, len3, o, placeholder, ref, sorter, triangleLink, v, value, valueCount, valueList, values;
+          var attrElem, checkContainer, closeFilterBox, controls, filterItem, filterItemExcluded, finalButtons, hasExcludedItem, len2, n, placeholder, ref1, sorter, triangleLink, v, value, valueCount, valueList, values;
           values = (function() {
             var results;
             results = [];
@@ -1352,12 +1334,12 @@
                 filter = $(this).val().toLowerCase().trim();
                 accept_gen = function(prefix, accepted) {
                   return function(v) {
-                    var real_filter, ref;
+                    var real_filter, ref1;
                     real_filter = filter.substring(prefix.length).trim();
                     if (real_filter.length === 0) {
                       return true;
                     }
-                    return ref = Math.sign(sorter(v.toLowerCase(), real_filter)), indexOf.call(accepted, ref) >= 0;
+                    return ref1 = Math.sign(sorter(v.toLowerCase(), real_filter)), indexOf.call(accepted, ref1) >= 0;
                   };
                 };
                 accept = filter.startsWith(">=") ? accept_gen(">=", [1, 0]) : filter.startsWith("<=") ? accept_gen("<=", [-1, 0]) : filter.startsWith(">") ? accept_gen(">", [1]) : filter.startsWith("<") ? accept_gen("<", [-1]) : filter.startsWith("~") ? function(v) {
@@ -1391,9 +1373,9 @@
               });
             }
             checkContainer = $("<div>").addClass("pvtCheckContainer").appendTo(valueList);
-            ref = values.sort(getSort(opts.sorters, attr));
-            for (o = 0, len3 = ref.length; o < len3; o++) {
-              value = ref[o];
+            ref1 = values.sort(getSort(opts.sorters, attr));
+            for (n = 0, len2 = ref1.length; n < len2; n++) {
+              value = ref1[n];
               valueCount = attrValues[attr][value];
               filterItem = $("<label>");
               filterItemExcluded = false;
@@ -1440,8 +1422,8 @@
             return closeFilterBox();
           });
           triangleLink = $("<span>").addClass('pvtTriangle').html(" &#x25BE;").bind("click", function(e) {
-            var left, ref1, top;
-            ref1 = $(e.currentTarget).position(), left = ref1.left, top = ref1.top;
+            var left, ref2, top;
+            ref2 = $(e.currentTarget).position(), left = ref2.left, top = ref2.top;
             return valueList.css({
               left: left + 10,
               top: top + 10
@@ -1462,27 +1444,9 @@
         aggregator = $("<select>").addClass('pvtAggregator').bind("change", function() {
           return refresh();
         });
-        aggregatorClone = $.extend(true, {}, opts.aggregators);
-        if (opts.sorting) {
-          aggregatorList = [];
-          for (a in aggregatorClone) {
-            if (!hasProp.call(aggregatorClone, a)) continue;
-            aggregatorList.push(a);
-          }
-          if (typeof opts.sorting === "function") {
-            aggregatorList.sort(opts.sorting);
-          } else {
-            aggregatorList.sort();
-          }
-          orderedAggregators = {};
-          for (i = o = 0, len3 = aggregatorList.length; o < len3; i = ++o) {
-            a = aggregatorList[i];
-            orderedAggregators[a] = aggregatorClone[a];
-          }
-          aggregatorClone = orderedAggregators;
-        }
-        for (x in aggregatorClone) {
-          if (!hasProp.call(aggregatorClone, x)) continue;
+        ref1 = opts.aggregators;
+        for (x in ref1) {
+          if (!hasProp.call(ref1, x)) continue;
           aggregator.append($("<option>").val(x).html(x));
         }
         ordering = {
@@ -1528,14 +1492,14 @@
           uiTable.prepend($("<tr>").append(rendererControl).append(unused));
         }
         this.html(uiTable);
-        ref = opts.cols;
-        for (t = 0, len4 = ref.length; t < len4; t++) {
-          x = ref[t];
+        ref2 = opts.cols;
+        for (n = 0, len2 = ref2.length; n < len2; n++) {
+          x = ref2[n];
           this.find(".pvtCols").append(this.find(".axis_" + ($.inArray(x, shownAttributes))));
         }
-        ref1 = opts.rows;
-        for (u = 0, len5 = ref1.length; u < len5; u++) {
-          x = ref1[u];
+        ref3 = opts.rows;
+        for (o = 0, len3 = ref3.length; o < len3; o++) {
+          x = ref3[o];
           this.find(".pvtRows").append(this.find(".axis_" + ($.inArray(x, shownAttributes))));
         }
         if (opts.aggregatorName != null) {
@@ -1547,7 +1511,7 @@
         initialRender = true;
         refreshDelayed = (function(_this) {
           return function() {
-            var exclusions, inclusions, len6, newDropdown, numInputsToProcess, pivotUIOptions, pvtVals, ref2, ref3, subopts, unusedAttrsContainer, vals, w, y;
+            var exclusions, inclusions, len4, newDropdown, numInputsToProcess, pivotUIOptions, pvtVals, ref4, ref5, subopts, t, u, unusedAttrsContainer, vals;
             subopts = {
               derivedAttributes: opts.derivedAttributes,
               localeStrings: opts.localeStrings,
@@ -1557,7 +1521,7 @@
               rows: [],
               dataClass: opts.dataClass
             };
-            numInputsToProcess = (ref2 = opts.aggregators[aggregator.val()]([])().numInputs) != null ? ref2 : 0;
+            numInputsToProcess = (ref4 = opts.aggregators[aggregator.val()]([])().numInputs) != null ? ref4 : 0;
             vals = [];
             _this.find(".pvtRows li span.pvtAttr").each(function() {
               return subopts.rows.push($(this).data("attrName"));
@@ -1577,12 +1541,19 @@
             });
             if (numInputsToProcess !== 0) {
               pvtVals = _this.find(".pvtVals");
-              for (x = w = 0, ref3 = numInputsToProcess; 0 <= ref3 ? w < ref3 : w > ref3; x = 0 <= ref3 ? ++w : --w) {
+              for (x = t = 0, ref5 = numInputsToProcess; 0 <= ref5 ? t < ref5 : t > ref5; x = 0 <= ref5 ? ++t : --t) {
                 newDropdown = $("<select>").addClass('pvtAttrDropdown').append($("<option>")).bind("change", function() {
                   return refresh();
                 });
-                for (y = 0, len6 = shownAttributes.length; y < len6; y++) {
-                  attr = shownAttributes[y];
+                if (opts.sorting) {
+                  if (typeof opts.sorting === "function") {
+                    shownAttributes.sort(opts.sorting);
+                  } else {
+                    shownAttributes.sort();
+                  }
+                }
+                for (u = 0, len4 = shownAttributes.length; u < len4; u++) {
+                  attr = shownAttributes[u];
                   newDropdown.append($("<option>").val(attr).text(attr));
                 }
                 pvtVals.append(newDropdown);
@@ -1626,13 +1597,13 @@
               }
             });
             subopts.filter = function(record) {
-              var excludedItems, k, ref4, ref5;
+              var excludedItems, k, ref6, ref7;
               if (!opts.filter(record)) {
                 return false;
               }
               for (k in exclusions) {
                 excludedItems = exclusions[k];
-                if (ref4 = "" + ((ref5 = record[k]) != null ? ref5 : 'null'), indexOf.call(excludedItems, ref4) >= 0) {
+                if (ref6 = "" + ((ref7 = record[k]) != null ? ref7 : 'null'), indexOf.call(excludedItems, ref6) >= 0) {
                   return false;
                 }
               }
